@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Xianyi Cui</Authors>
+    <Version>0.1.0</Version>
+    <Description>Binary management interface and core implement</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StorageMate.Core" Version="0.2.1" />
+  </ItemGroup>
+
+</Project>
