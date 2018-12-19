@@ -11,7 +11,8 @@ namespace BinaryMan.Azure
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class BlobOnlyBinaryMan : BaseBinaryMan<BinaryInfo>
+    //todo: Finish the implementation and change to public
+    internal class BlobOnlyBinaryMan : BaseBinaryMan<BinaryInfo>
     {
         private readonly string _binaryContainerName = "binary-man-container";
         private readonly CloudBlobContainer _binaryContainer;
@@ -66,6 +67,11 @@ namespace BinaryMan.Azure
         }
 
         public override Task<BinaryInfo> UploadFromFile(FileInfo binaryFile, string binaryName, Version binaryVersion, CancellationToken token, string tag = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<BinaryInfo> UploadFromFile(FileInfo binaryFile, BinaryInfo binaryInfo, CancellationToken token)
         {
             throw new NotImplementedException();
         }

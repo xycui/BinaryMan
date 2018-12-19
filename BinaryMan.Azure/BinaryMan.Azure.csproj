@@ -7,7 +7,7 @@
     <Company>Xianyi Cui</Company>
     <Authors>Xianyi Cui</Authors>
     <Description>Azure storage implement for binary management</Description>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
