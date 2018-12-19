@@ -16,4 +16,10 @@
     <ProjectReference Include="..\BinaryMan.Azure\BinaryMan.Azure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="mock.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

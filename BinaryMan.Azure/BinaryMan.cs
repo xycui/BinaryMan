@@ -33,6 +33,7 @@
             _binaryContainerName = !string.IsNullOrEmpty(containerName) ? NamingUtil.CamelCase2Dash(containerName) : _binaryContainerName;
             _cloudTableName = !string.IsNullOrEmpty(tableName) ? tableName : _cloudTableName;
             _binaryContainer = account.CreateCloudBlobClient().GetContainerReference(_binaryContainerName);
+            _binaryContainer.CreateIfNotExistsAsync();
             _binaryInfoStore = new TableBasedDataAccessor<BinaryInfo>(accountConStr, _cloudTableName);
             _binaryInfoInsighter = new TableDataInsighter<BinaryInfo>(accountConStr, $"{_cloudTableName}Stats");
         }
@@ -70,8 +71,8 @@
                 : binaryName.Trim();
 
             var key = version == null
-                ? $"{nameof(BinaryInfo.Name)}_{binaryName}"
-                : $"{nameof(BinaryInfo.Id)}_{new BinaryInfo(binaryName, version).Id}";
+                ? $"{typeof(BinaryInfo)}_{nameof(BinaryInfo.Name)}_{binaryName}"
+                : $"{typeof(BinaryInfo)}_{nameof(BinaryInfo.Id)}_{new BinaryInfo(binaryName, version).Id}";
 
             return await _binaryInfoStore.ReadAsync(key);
         }
@@ -126,10 +127,10 @@
             await remoteBlob.UploadFromFileAsync(binaryFile.FullName);
 
             binaryInfo = new BinaryInfo(binaryName, binaryVersion, tag);
-            var writeDataTask = _binaryInfoStore.WriteAsync($"{nameof(BinaryInfo.Id)}_{binaryInfo.Id}", binaryInfo);
+            var writeDataTask = _binaryInfoStore.WriteAsync($"{typeof(BinaryInfo)}_{nameof(BinaryInfo.Id)}_{binaryInfo.Id}", binaryInfo);
             var writeLatestTask =
-                _binaryInfoStore.WriteAsync($"{nameof(BinaryInfo.Name)}_{binaryName}", binaryInfo);
-
+                _binaryInfoStore.WriteAsync($"{typeof(BinaryInfo)}_{nameof(BinaryInfo.Name)}_{binaryName}", binaryInfo);
+            await _binaryInfoInsighter.AddForStatsAsync(binaryInfo);
             return (await Task.WhenAll(writeDataTask, writeLatestTask)).FirstOrDefault();
         }
 

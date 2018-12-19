@@ -1,9 +1,11 @@
 ﻿namespace BinaryMan.Azure.Tests
 {
-    using System;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
+    using Core.Schema;
     using NUnit.Framework;
+    using System;
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class BinaryManTests
     {
@@ -18,19 +20,24 @@
 
 
         [Test]
-        public void Test()
+        public void TestUploadAndCheckResult()
         {
+            _ = string.IsNullOrEmpty(ConnStr) ? throw new IgnoreException($"{ConnStr} is empty") : ConnStr;
+
             var binaryMan = new BinaryMan(ConnStr, BlobContainerName, TableName);
+            const string binaryName = "mock11";
+            var binaryVersion = new Version("1.0.4");
+            const string binaryTag = "1000";
 
-            CloudStorageAccount account = CloudStorageAccount.Parse("");
+            var binaryInfo = new BinaryInfo(binaryName, binaryVersion, binaryTag);
+            Assert.IsEmpty(Task.Run(async () => await binaryMan.ListByName(binaryName)).Result);
+            Assert.IsNull(Task.Run(async () => await binaryMan.GetBinaryInfo(binaryName, binaryVersion)).Result);
 
-            Console.WriteLine(account.CreateCloudBlobClient().GetContainerReference("test").GetBlobReference("reply.prod.txt").IsSnapshot);
-            Console.WriteLine(account.CreateCloudBlobClient().GetContainerReference("test").GetBlobReference("reply.prod.txt").SnapshotQualifiedUri);
-            foreach (var listBlobItem in account.CreateCloudBlobClient().GetContainerReference("test").ListBlobsSegmentedAsync("",true,BlobListingDetails.All,500,new BlobContinuationToken(),new BlobRequestOptions(), new OperationContext()).Result.Results)
-            {
-                var file = listBlobItem as CloudBlockBlob;
-                Console.WriteLine(file.SnapshotTime +"  " +file.SnapshotQualifiedStorageUri);
-            }
+            var info = Task.Run(async () => await binaryMan.UploadFromFile(new FileInfo("mock.txt"), binaryName, binaryVersion, CancellationToken.None,
+                binaryTag)).Result;
+
+            Assert.IsNotEmpty(Task.Run(async () => await binaryMan.ListByName(binaryName)).Result);
+            Assert.NotNull(Task.Run(async () => await binaryMan.GetBinaryInfo(binaryName, binaryVersion)).Result);
 
             Assert.Pass();
         }

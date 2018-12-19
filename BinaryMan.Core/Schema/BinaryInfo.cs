@@ -12,8 +12,8 @@
         public BinaryInfo(string name, Version version, string tag = null)
         {
             Name = name;
-            Version = version;
-            Tag = tag;
+            VersionString = version?.ToString();
+            Tag = tag ?? string.Empty;
         }
 
         [StatsTarget]
@@ -22,7 +22,8 @@
         public string Name;
         public DateTimeOffset UploadTime = DateTimeOffset.UtcNow;
         [StatsTarget]
-        public Version Version;
+        public string VersionString;
+        public Version Version => string.IsNullOrEmpty(VersionString) ? null : Version.Parse(VersionString);
         public string Tag;
         public int DownloadCount;
     }

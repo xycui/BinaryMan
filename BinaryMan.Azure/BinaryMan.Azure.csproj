@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StorageMate.Azure" Version="0.2.2" />
+    <PackageReference Include="StorageMate.Azure" Version="0.2.4" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
 
