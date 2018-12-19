@@ -22,8 +22,12 @@
         public string Name;
         public DateTimeOffset UploadTime = DateTimeOffset.UtcNow;
         [StatsTarget]
-        public string VersionString;
-        public Version Version => string.IsNullOrEmpty(VersionString) ? null : Version.Parse(VersionString);
+        public string VersionString { get; private set; }
+        public Version Version
+        {
+            get => string.IsNullOrEmpty(VersionString) ? null : Version.Parse(VersionString);
+            set => VersionString = value == null ? string.Empty : value.ToString();
+        }
         public string Tag;
         public int DownloadCount;
     }

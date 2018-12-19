@@ -8,12 +8,12 @@ namespace BinaryMan.Core
 {
     using System.Threading;
 
-    public abstract class BaseBinaryMan : IBinaryMan
+    public abstract class BaseBinaryMan<TBinaryInfo> : IBinaryMan<TBinaryInfo> where TBinaryInfo : BinaryInfo, new()
     {
-        public abstract Task<IList<BinaryInfo>> ListAllLatest();
+        public abstract Task<IList<TBinaryInfo>> ListAllLatest();
 
-        public abstract Task<IList<BinaryInfo>> ListByName(string binaryName);
-        public abstract Task<BinaryInfo> GetBinaryInfo(string binaryName, Version version = null);
+        public abstract Task<IList<TBinaryInfo>> ListByName(string binaryName);
+        public abstract Task<TBinaryInfo> GetBinaryInfo(string binaryName, Version version = null);
         public abstract Task<FileInfo> DownloadToFile(string binaryName, Version binaryVersion, FileInfo destFile, CancellationToken token);
 
         public Task<FileInfo> DownloadToFile(string binaryName, Version binaryVersion, string destFilePath, CancellationToken token)
@@ -28,12 +28,12 @@ namespace BinaryMan.Core
             return DownloadToDir(binaryName, binaryVersion, new DirectoryInfo(destDirPath), token);
         }
 
-        public Task<BinaryInfo> UploadFromFile(string binaryFilePath, string binaryName, Version binaryVersion, CancellationToken token, string tag = null)
+        public Task<TBinaryInfo> UploadFromFile(string binaryFilePath, string binaryName, Version binaryVersion, CancellationToken token, string tag = null)
         {
             return UploadFromFile(new FileInfo(binaryFilePath), binaryName, binaryVersion, token, tag);
         }
 
-        public abstract Task<BinaryInfo> UploadFromFile(FileInfo binaryFile, string binaryName, Version binaryVersion, CancellationToken token,
+        public abstract Task<TBinaryInfo> UploadFromFile(FileInfo binaryFile, string binaryName, Version binaryVersion, CancellationToken token,
             string tag = null);
     }
 }

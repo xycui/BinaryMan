@@ -11,7 +11,7 @@ namespace BinaryMan.Azure
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class BlobOnlyBinaryMan : BaseBinaryMan
+    public class BlobOnlyBinaryMan : BaseBinaryMan<BinaryInfo>
     {
         private readonly string _binaryContainerName = "binary-man-container";
         private readonly CloudBlobContainer _binaryContainer;
