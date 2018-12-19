@@ -33,7 +33,15 @@ namespace BinaryMan.Core
             return UploadFromFile(new FileInfo(binaryFilePath), binaryName, binaryVersion, token, tag);
         }
 
+        public Task<TBinaryInfo> UploadFromFile(string binaryFilePath, TBinaryInfo binaryInfo, CancellationToken token)
+        {
+            return UploadFromFile(new FileInfo(binaryFilePath), binaryInfo, token);
+        }
+
         public abstract Task<TBinaryInfo> UploadFromFile(FileInfo binaryFile, string binaryName, Version binaryVersion, CancellationToken token,
             string tag = null);
+
+        public abstract Task<TBinaryInfo> UploadFromFile(FileInfo binaryFile, TBinaryInfo binaryInfo,
+            CancellationToken token);
     }
 }

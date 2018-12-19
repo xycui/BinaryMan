@@ -144,6 +144,35 @@
             return (await Task.WhenAll(writeDataTask, writeLatestTask)).FirstOrDefault();
         }
 
+        public override async Task<TBinaryInfo> UploadFromFile(FileInfo binaryFile, TBinaryInfo binaryInfo, CancellationToken token)
+        {
+            var loadedInfo = await GetBinaryInfo(binaryInfo.Name, binaryInfo.Version);
+            if (loadedInfo != null)
+            {
+                _ = loadedInfo.Version > binaryInfo.Version
+                    ? throw new Exception(
+                        $"Repo latest version {loadedInfo.Version} larger than upload one {binaryInfo.Version}")
+                    : loadedInfo.Version == binaryInfo.Version
+                        ? throw new Exception(
+                            $"Version {binaryInfo.Version} is already existed in the repo.")
+                        : binaryInfo.Version;
+            }
+
+            //todo add upload binary to blob logic
+            var remoteName = GetBinaryRemoteName(binaryInfo.Name, binaryInfo.Version);
+            var remoteBlob = _binaryContainer.GetBlockBlobReference(remoteName);
+            await remoteBlob.UploadFromFileAsync(binaryFile.FullName);
+            
+            var writeDataTask =
+                _binaryInfoStore.WriteAsync($"{typeof(TBinaryInfo)}_{nameof(binaryInfo.Id)}_{binaryInfo.Id}",
+                    binaryInfo);
+            var writeLatestTask =
+                _binaryInfoStore.WriteAsync($"{typeof(TBinaryInfo)}_{nameof(binaryInfo.Name)}_{binaryInfo.Name}",
+                    binaryInfo);
+            await _binaryInfoInsighter.AddForStatsAsync(binaryInfo);
+            return (await Task.WhenAll(writeDataTask, writeLatestTask)).FirstOrDefault();
+        }
+
         private static string GetBinaryRemoteName(string binaryName, Version binaryVersion)
         {
             return $"{binaryName.Trim('/')}/{binaryVersion}";

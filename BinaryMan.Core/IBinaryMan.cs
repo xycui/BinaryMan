@@ -23,7 +23,9 @@
 
         Task<TBinaryInfo> UploadFromFile(string binaryFilePath, string binaryName, Version binaryVersion,
             CancellationToken token, string tag = null);
+        Task<TBinaryInfo> UploadFromFile(string binaryFilePath, TBinaryInfo binaryInfo, CancellationToken token);
         Task<TBinaryInfo> UploadFromFile(FileInfo binaryFile, string binaryName, Version binaryVersion, CancellationToken token,
             string tag = null);
+        Task<TBinaryInfo> UploadFromFile(FileInfo binaryFile, TBinaryInfo binaryInfo, CancellationToken token);
     }
 }
