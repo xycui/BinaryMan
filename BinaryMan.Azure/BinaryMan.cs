@@ -72,9 +72,10 @@
                 ? throw new ArgumentNullException(nameof(binaryName))
                 : binaryName.Trim();
 
+            var binaryInfo = new TBinaryInfo { Name = binaryName, Version = version };
             var key = version == null
-                ? $"{typeof(BinaryInfo)}_{nameof(BinaryInfo.Name)}_{binaryName}"
-                : $"{typeof(BinaryInfo)}_{nameof(BinaryInfo.Id)}_{new BinaryInfo(binaryName, version).Id}";
+                ? binaryInfo.GetIdKey(info => info.Name)
+                : binaryInfo.GetIdKey(info => info.Id);
 
             return await _binaryInfoStore.ReadAsync(key);
         }
@@ -89,9 +90,9 @@
             }
 
             var remoteName = GetBinaryRemoteName(binaryName, binaryVersion);
-            var binaryInfo =
-                await _binaryInfoStore.ReadAsync(
-                    $"{nameof(BinaryInfo.Id)}_{new BinaryInfo(binaryName, binaryVersion).Id}");
+            var binaryInfo = new TBinaryInfo { Name = binaryName, Version = binaryVersion };
+            binaryInfo =
+                await _binaryInfoStore.ReadAsync(binaryInfo.GetIdKey(info => info.Id));
             if (binaryInfo == null || !await _binaryContainer.GetBlobReference(remoteName).ExistsAsync())
             {
                 throw new Exception("Remote package could not be found");
@@ -135,11 +136,9 @@
 
             binaryInfo = new TBinaryInfo { Name = binaryName, Version = binaryVersion, Tag = tag };
             var writeDataTask =
-                _binaryInfoStore.WriteAsync($"{typeof(TBinaryInfo)}_{nameof(binaryInfo.Id)}_{binaryInfo.Id}",
-                    binaryInfo);
+                _binaryInfoStore.WriteAsync(binaryInfo.GetIdKey(info => info.Id), binaryInfo);
             var writeLatestTask =
-                _binaryInfoStore.WriteAsync($"{typeof(TBinaryInfo)}_{nameof(binaryInfo.Name)}_{binaryName}",
-                    binaryInfo);
+                _binaryInfoStore.WriteAsync(binaryInfo.GetIdKey(info => info.Name), binaryInfo);
             await _binaryInfoInsighter.AddForStatsAsync(binaryInfo);
             return (await Task.WhenAll(writeDataTask, writeLatestTask)).FirstOrDefault();
         }
@@ -162,13 +161,11 @@
             var remoteName = GetBinaryRemoteName(binaryInfo.Name, binaryInfo.Version);
             var remoteBlob = _binaryContainer.GetBlockBlobReference(remoteName);
             await remoteBlob.UploadFromFileAsync(binaryFile.FullName);
-            
+
             var writeDataTask =
-                _binaryInfoStore.WriteAsync($"{typeof(TBinaryInfo)}_{nameof(binaryInfo.Id)}_{binaryInfo.Id}",
-                    binaryInfo);
+                _binaryInfoStore.WriteAsync(binaryInfo.GetIdKey(info => info.Id), binaryInfo);
             var writeLatestTask =
-                _binaryInfoStore.WriteAsync($"{typeof(TBinaryInfo)}_{nameof(binaryInfo.Name)}_{binaryInfo.Name}",
-                    binaryInfo);
+                _binaryInfoStore.WriteAsync(binaryInfo.GetIdKey(info => info.Name), binaryInfo);
             await _binaryInfoInsighter.AddForStatsAsync(binaryInfo);
             return (await Task.WhenAll(writeDataTask, writeLatestTask)).FirstOrDefault();
         }
