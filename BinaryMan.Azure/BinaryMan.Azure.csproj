@@ -7,8 +7,8 @@
     <Company>Xianyi Cui</Company>
     <Authors>Xianyi Cui</Authors>
     <Description>Azure storage implement for binary management</Description>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>Fix key generation bug</PackageReleaseNotes>
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>optimized for parallel</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

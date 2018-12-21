@@ -30,7 +30,7 @@ namespace BinaryMan.Core.Schema
         public string Name;
         public DateTimeOffset UploadTime = DateTimeOffset.UtcNow;
         [StatsTarget]
-        public string VersionString { get; private set; }
+        public string VersionString { get; internal set; }
         public Version Version
         {
             get => string.IsNullOrEmpty(VersionString) ? null : Version.Parse(VersionString);

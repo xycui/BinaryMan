@@ -15,6 +15,7 @@
 
     public class BinaryMan<TBinaryInfo> : BaseBinaryMan<TBinaryInfo> where TBinaryInfo : BinaryInfo, new()
     {
+        private const int MaxParallelCnt = 10;
         private readonly string _binaryContainerName = "binary-man-container";
         private readonly string _cloudTableName = "BinaryManMetaData";
 
@@ -43,15 +44,7 @@
         public override async Task<IList<TBinaryInfo>> ListAllLatest()
         {
             var nameList = await _binaryInfoInsighter.ListAllAsync(info => info.Name);
-            var list = new List<TBinaryInfo>();
-            foreach (var name in nameList)
-            {
-                var binaryInfo = await GetBinaryInfo(name);
-                if (binaryInfo != null)
-                {
-                    list.Add(binaryInfo);
-                }
-            }
+            var list = nameList.ProcessInParallel(s => GetBinaryInfo(s), MaxParallelCnt);
 
             return list;
         }
@@ -61,16 +54,11 @@
             var idList =
                 await _binaryInfoInsighter.ListWithConditionAsync(info => info.Name, binaryName, info => info.Id);
 
-            var list = new List<TBinaryInfo>();
-            foreach (var id in idList)
+            var list = idList.ProcessInParallel(id =>
             {
                 var key = new TBinaryInfo { Id = id }.GetIdKey(info => info.Id);
-                var binaryInfo = await _binaryInfoStore.ReadAsync(key);
-                if (binaryInfo != null)
-                {
-                    list.Add(binaryInfo);
-                }
-            }
+                return _binaryInfoStore.ReadAsync(key);
+            }, MaxParallelCnt);
 
             return list;
         }

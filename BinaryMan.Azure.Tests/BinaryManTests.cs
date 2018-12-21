@@ -9,7 +9,8 @@
 
     public class BinaryManTests
     {
-        private const string ConnStr = "UseDevelopmentStorage=true";
+        private const string ConnStr =
+            "UseDevelopmentStorage=true";
         private const string BlobContainerName = "binary-man-test";
         private const string TableName = "BinaryManTest";
 
