@@ -46,7 +46,11 @@
             var list = new List<TBinaryInfo>();
             foreach (var name in nameList)
             {
-                list.Add(await GetBinaryInfo(name));
+                var binaryInfo = await GetBinaryInfo(name);
+                if (binaryInfo != null)
+                {
+                    list.Add(binaryInfo);
+                }
             }
 
             return list;
@@ -60,7 +64,12 @@
             var list = new List<TBinaryInfo>();
             foreach (var id in idList)
             {
-                list.Add(await _binaryInfoStore.ReadAsync(id));
+                var key = new TBinaryInfo { Id = id }.GetIdKey(info => info.Id);
+                var binaryInfo = await _binaryInfoStore.ReadAsync(key);
+                if (binaryInfo != null)
+                {
+                    list.Add(binaryInfo);
+                }
             }
 
             return list;

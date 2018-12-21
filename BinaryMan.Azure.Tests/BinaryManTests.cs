@@ -25,7 +25,7 @@
             _ = string.IsNullOrEmpty(ConnStr) ? throw new IgnoreException($"{ConnStr} is empty") : ConnStr;
 
             var binaryMan = new BinaryMan(ConnStr, BlobContainerName, TableName);
-            const string binaryName = "mock11";
+            var binaryName = Guid.NewGuid().ToString("N");
             var binaryVersion = new Version("1.0.4");
             const string binaryTag = "1000";
 

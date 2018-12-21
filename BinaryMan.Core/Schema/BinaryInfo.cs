@@ -1,10 +1,14 @@
-﻿namespace BinaryMan.Core.Schema
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("BinaryMan.Azure")]
+namespace BinaryMan.Core.Schema
 {
     using StorageMate.Core.Stats;
     using System;
 
     public class BinaryInfo
     {
+        private string _id;
         public BinaryInfo()
         {
         }
@@ -17,7 +21,11 @@
         }
 
         [StatsTarget]
-        public string Id => $"{Name}_{Version}";
+        public string Id
+        {
+            get => string.IsNullOrEmpty(_id) ? $"{Name}_{Version}" : _id;
+            internal set => _id = value;
+        }
         [StatsTarget, StatsCondition]
         public string Name;
         public DateTimeOffset UploadTime = DateTimeOffset.UtcNow;

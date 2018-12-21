@@ -20,7 +20,6 @@
             return partitionKey;
         }
 
-
         private static MemberExpression GetMemberExpBody(LambdaExpression expression)
         {
             if (!(expression.Body is MemberExpression body))
