@@ -7,12 +7,12 @@
     <Company>Xianyi Cui</Company>
     <Authors>Xianyi Cui</Authors>
     <Description>Azure storage implement for binary management</Description>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <PackageReleaseNotes>optimized for parallel</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StorageMate.Azure" Version="0.2.6" />
+    <PackageReference Include="StorageMate.Azure" Version="0.2.7" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
 
