@@ -34,8 +34,14 @@ namespace BinaryMan.Core.Schema
         public Version Version
         {
             get => string.IsNullOrEmpty(VersionString) ? null : Version.Parse(VersionString);
-            set => VersionString = value == null ? string.Empty : value.ToString();
+            internal set => VersionString = value == null ? string.Empty : value.ToString();
         }
+
+        public void SetVersion(Version version)
+        {
+            Version = version;
+        }
+
         public string Tag;
         public int DownloadCount;
     }
