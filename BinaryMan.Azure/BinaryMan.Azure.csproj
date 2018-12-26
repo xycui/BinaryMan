@@ -7,8 +7,8 @@
     <Company>Xianyi Cui</Company>
     <Authors>Xianyi Cui</Authors>
     <Description>Azure storage implement for binary management</Description>
-    <Version>1.0.6</Version>
-    <PackageReleaseNotes>optimized for parallel</PackageReleaseNotes>
+    <Version>1.0.7</Version>
+    <PackageReleaseNotes>fix download to fileinfo not exist issue</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

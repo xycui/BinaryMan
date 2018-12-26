@@ -101,7 +101,7 @@
 
             tmpFileInfo.CopyTo(destFile.FullName, true);
             tmpFileInfo.Delete();
-            return destFile;
+            return new FileInfo(destFile.FullName);
         }
 
         public override Task<FileInfo> DownloadToDir(string binaryName, Version binaryVersion, DirectoryInfo destDir,
