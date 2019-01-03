@@ -5,7 +5,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Xianyi Cui</Authors>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Description>Binary management interface and core implement</Description>
     <PackageReleaseNotes>version string change to internal set. because private set setter cannot be accessed.</PackageReleaseNotes>
   </PropertyGroup>
